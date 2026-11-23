@@ -1,0 +1,22 @@
+{
+  "name": "qc-stack",
+  "version": "0.1.0",
+  "description": "Start and supervise local application stacks for tests",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "qc-stack": "./src/cli/stack.mjs"
+  },
+  "exports": "./src/stack/stack.mjs",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test src/stack/stack.test.mjs",
+    "spec:check": "qc check"
+  },
+  "repository": "git+https://github.com/shawrylk/qc-stack.git"
+}
