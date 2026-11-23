@@ -17,4 +17,6 @@ Use `qc-stack up|down|status [names...] [--timeout <ms>]` when installed.
 Stack names come from `~/.qc/stacks.json`. Omit names to act on all registered
 stacks. The timeout defaults to 120,000 milliseconds.
 
+The kit installs `qc-stack` and `qc-screens` in one `npx` call, enabling Auth0 session refresh.
+
 The stack implementation and tests came from architecture-kit at `7883543`.

@@ -13,6 +13,7 @@ const child = spawn(state.manifest.up, { cwd: state.repo, shell: true, detached:
 child.on("error", () => { state.error = "Cannot start plugin command"; writeFileSync(file, JSON.stringify(state)); });
 child.on("exit", code => { if (code) { state.error = `Plugin exited ${code}`; writeFileSync(file, JSON.stringify(state)); } });
 let refreshing = false;
+let warnedMissingScreens = false;
 const timer = setInterval(async () => {
   if (existsSync(stop)) {
     clearInterval(timer);
@@ -22,8 +23,13 @@ const timer = setInterval(async () => {
   if (!refreshing && state.manifest.login.kind === "auth0-session") {
     refreshing = true;
     try {
-      const { refreshStackSessions } = await import("../screens/stack-auth.mjs");
-      await refreshStackSessions(state.manifest.name);
+      const screens = await import("qc-screens/stack-auth").catch(error => {
+        if (error.code === "ERR_MODULE_NOT_FOUND" && !warnedMissingScreens) {
+          warnedMissingScreens = true;
+          console.error("qc-stack: install qc-screens to refresh auth0 sessions");
+        }
+      });
+      await screens?.refreshStackSessions(state.manifest.name);
     } catch { /* The refresh ledger delays a failed session until its next due time. */ }
     finally { refreshing = false; }
   }
